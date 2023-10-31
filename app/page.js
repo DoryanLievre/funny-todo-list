@@ -19,8 +19,10 @@ export default function Home() {
     }, [tasks]);
 
     useEffect(() => {
-        const tasks = JSON.parse(localStorage.getItem("tasks"));
-        setTasks(tasks);
+        const tasksFromLocalStorage = JSON.parse(localStorage.getItem("tasks"));
+        if (tasksFromLocalStorage) {
+            setTasks(tasksFromLocalStorage);
+        }
     }, []);
 
     function addTask(name) {
