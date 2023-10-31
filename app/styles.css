@@ -1,0 +1,226 @@
+body{
+   margin: 0;
+   padding: 0;
+   background-color: #17181f;
+   color: #ddd;
+}
+main{
+   max-width: 300px;
+   margin: 20px auto;
+}
+*{
+   box-sizing: border-box;
+}
+
+h1,h2{
+   text-align: center;
+}
+
+
+form{
+   border:3px solid #30313D;
+    border-radius: 10px;
+    padding: 5px;
+    display: flex;
+}
+form input[type="text"]{
+   background: none;
+   color: #fff;
+   border: 0;
+   padding: 0 8px;
+   display: block;
+   width: 100%;
+}
+form button{
+   background-color: #ed9f22;
+   border: 0;
+   border-radius: 6px;
+   cursor: pointer;
+}
+div.task{
+   background-color: #30313D;
+   border-radius: 10px;
+   padding: 5px 9px;
+   margin-top: 5px;
+   display: flex;
+   align-items: center;
+   transition: opacity 0.3s linear;
+   flex-grow: 1;
+}
+div.task svg{
+   height: 20px;
+   margin-right: 6px;
+   fill:#ed9f22;
+}
+div.task.done{
+   opacity: 0.3;
+}
+div.task span{
+   position: relative;
+}
+div.task-name, div.task form{
+   flex-grow: 1;
+}
+
+div.task span:before {
+   content: '';
+   display: block;
+   width: 0;
+   height: 1px;
+   background-color: #ddd ;
+   position: absolute;
+   top: 10px;
+   transition: width 0.2s linear;
+}
+div.task.done span:before {
+   width: 100%;
+}
+
+div.task input{
+   border: 2px solid #ed9f22;
+   border-radius: 5px;
+   padding: 2px 4px;
+}
+
+div.checkbox{
+   display: flex;
+   align-items: center;
+}
+
+button.trash{
+   background: none;
+   border: 0;
+   cursor: pointer;
+   margin-left: 6px;
+   display: flex;
+   align-items: center;
+}
+button.trash svg:hover{
+   fill: #ed9f22
+}
+button.trash svg{
+   height: 15px;
+   fill: #888;
+}
+
+.task-container{
+   display: flex;
+   flex-direction: row-reverse;
+   align-items: center;
+   justify-content: center;
+}
+.button-container {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   height: 100%;
+   padding-top: 2px;
+}
+.task-content{
+   flex-grow: 1;
+}
+
+button.move{
+   background: none;
+   border: 0;
+   cursor: pointer;
+   display: flex;
+   align-items: center;
+}
+button.move svg{
+   fill: #888;
+}
+button.move svg:hover{
+   fill: #ed9f22;
+}
+.center-svg {
+   display: block;
+   margin: 0 auto;
+   text-align: center;
+}
+
+img{
+   z-index: 20;
+   position: fixed;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   width: 100%;
+   height: auto;
+   max-width: 500px;
+   display: block;
+   filter: brightness(1.5);
+}
+
+/* Média query pour les écrans de taille moyenne (md) */
+@media (min-width: 768px) {
+   body {
+      font-size: 16px;
+   }
+   main {
+      max-width: 400px;
+   }
+   form {
+      border-width: 4px;
+   }
+   form button {
+      font-size: 18px;
+   }
+   form input[type="text"] {
+      font-size: 18px;
+   }
+
+   div.task {
+      padding: 7px 9px;
+   }
+
+   div.task svg {
+      height: 20px;
+   }
+   .task-list-container {
+      margin-top: 10px;
+      max-height: 62vh;
+   }
+}
+
+/* Média query pour les écrans extra larges (xl) */
+@media (min-width: 1200px) {
+   body {
+      font-size: 24px;
+   }
+   main {
+      max-width: 800px;
+   }
+   form {
+      border-width: 6px;
+   }
+   form button {
+      font-size: 24px;
+   }
+   form input[type="text"] {
+      font-size: 24px;
+   }
+
+   div.task {
+      padding: 10px 12px;
+   }
+
+   div.task svg {
+      height: 24px;
+   }
+   div.task span:before {
+      top: 15px;
+   }
+   .task-list-container {
+      margin-top: 20px;
+      max-height: 70vh;
+      overflow-y: auto;
+   }
+}
+
+.task-list-container {
+   margin-top: 20px;
+   max-height: 70vh;
+   overflow-y: auto;
+}

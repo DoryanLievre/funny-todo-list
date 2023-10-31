@@ -1,95 +1,156 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+'use client'
+import styles from './styles.css'
+import TaskForm from "@/components/TaskForm";
+import Task from "@/components/Task";
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+    const [tasks, setTasks] = useState([]);
+    const [checkedTasks, setCheckedTasks] = useState(0);
+    const [soundPlaying, setSoundPlaying] = useState(false);
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
+    const doneTasks = tasks.filter(task => task.done).length;
+    const totalTasks = tasks.length;
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
+    useEffect(() => {
+        if (tasks.length === 0) return;
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+    }, [tasks]);
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+    useEffect(() => {
+        const tasks = JSON.parse(localStorage.getItem("tasks"));
+        setTasks(tasks);
+    }, []);
+
+    function addTask(name) {
+        setTasks(prevState => {
+            return [...prevState, { name: name, done: false }];
+        });
+    }
+
+    function removeTask(index) {
+        setTasks(prevState => {
+            const newTasks = [...prevState];
+            newTasks.splice(index, 1);
+            return newTasks;
+        });
+    }
+
+    function renameTask(index, newName) {
+        setTasks(prevState => {
+            const newTasks = [...prevState];
+            newTasks[index].name = newName;
+            return newTasks;
+        });
+    }
+
+    const soundReplacement = new Audio("/sounds/sound_done.mp3");
+    soundReplacement.volume = 0.02;
+
+    function updateTask(index, newDone) {
+        setTasks((prevState) => {
+            const newTasks = [...prevState];
+            newTasks[index].done = newDone;
+
+            const numCheckedTasks = newTasks.filter((task) => task.done).length;
+
+            if (numCheckedTasks === totalTasks) {
+                if (!soundPlaying) {
+                    const soundReplacement = new Audio("/sounds/sound_done.mp3");
+                    soundReplacement.volume = 0.02;
+                    soundReplacement.play();
+                    setSoundPlaying(true);
+                }
+            } else {
+                setSoundPlaying(false);
+            }
+
+            setCheckedTasks(numCheckedTasks);
+            return newTasks;
+        });
+    }
+
+    function moveTaskUp(index) {
+        if (index === 0) return;
+        setTasks(prevState => {
+            const newTasks = [...prevState];
+            [newTasks[index], newTasks[index - 1]] = [newTasks[index - 1], newTasks[index]];
+            return newTasks;
+        });
+    }
+
+    function moveTaskDown(index) {
+        if (index === tasks.length - 1) return;
+        setTasks(prevState => {
+            const newTasks = [...prevState];
+            [newTasks[index], newTasks[index + 1]] = [newTasks[index + 1], newTasks[index]];
+            return newTasks;
+        });
+    }
+
+
+
+    function getMessage() {
+        const percentage = doneTasks / totalTasks * 100;
+        if (percentage === 0) {
+            return 'Aller, fait-en au moins une ! 🙏';
+        }
+        if (percentage < 25) {
+            return 'Aller, on continue 💪 !';
+        }
+        if (percentage < 50) {
+            return 'Tu peux le faire 🤗 !';
+        }
+        if (percentage < 75) {
+            return 'Tu y es presque 🤩 !';
+        }
+        if (percentage < 90) {
+            return 'Ne lâche rien 😎 !';
+        }
+        if (percentage < 100) {
+            return 'Encore un petit effort 😁 !';
+        }
+        if (percentage === 100) {
+            return "Bravo, tu as terminé pour aujourd'hui 🥳 !";
+        }
+    }
+
+    function toggleMute() {
+        setIsMuted((prevIsMuted) => !prevIsMuted);
+    }
+
+    return (
+        <main>
+            {soundPlaying && checkedTasks === totalTasks && <img className="img-fade-in" src="/images/mh_quest_complete.png" alt="Image" />}
+            <h1>{doneTasks}/{totalTasks} Terminées</h1>
+            <h2>{getMessage()}</h2>
+            <TaskForm onAdd={addTask} />
+            <div className="task-list-container">
+                {tasks.map((task, index) => (
+                    <div className="task-container"  key={index}>
+                        <div className="button-container">
+                            <button className="move" onClick={() => moveTaskUp(index)}>
+                                <svg className="center-svg" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 320 512"><path d="M182.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-9.2 9.2-11.9 22.9-6.9 34.9s16.6 19.8 29.6 19.8H288c12.9 0 24.6-7.8 29.6-19.8s2.2-25.7-6.9-34.9l-128-128z"/>
+                                </svg>
+                            </button>
+                            <button className="move" onClick={() => moveTaskDown(index)}>
+                                <svg className="center-svg" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 320 512"><path d="M182.6 470.6c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-9.2-9.2-11.9-22.9-6.9-34.9s16.6-19.8 29.6-19.8H288c12.9 0 24.6 7.8 29.6 19.8s2.2 25.7-6.9 34.9l-128 128z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div className="task-content">
+                            <Task
+                                {...task}
+                                onToggle={done => updateTask(index, done)}
+                                onDelete={() => removeTask(index)}
+                                onRename={newName => renameTask(index, newName)}
+                            />
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </main>
+    );
 }
