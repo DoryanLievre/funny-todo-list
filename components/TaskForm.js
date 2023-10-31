@@ -1,14 +1,18 @@
 import { useState } from "react";
+import { Howl } from 'howler'; // Importez Howl depuis Howler
 
 export default function TaskForm({ onAdd }) {
     const [taskName, setTaskName] = useState("");
-    const soundCreate = new Audio("/sounds/sound_create.mp3");
-    soundCreate.volume = 0.2;
 
     function handleSubmit(event) {
         event.preventDefault();
 
         if (taskName.trim() !== "") {
+            const soundCreate = new Howl({
+                src: ['/sounds/sound_create.mp3'],
+                volume: 0.2,
+            });
+
             soundCreate.play();
             onAdd(taskName);
             setTaskName("");
@@ -16,7 +20,7 @@ export default function TaskForm({ onAdd }) {
     }
 
     return (
-        <form onSubmit={event => handleSubmit(event)}>
+        <form onSubmit={(event) => handleSubmit(event)}>
             <button>+</button>
             <input
                 value={taskName}

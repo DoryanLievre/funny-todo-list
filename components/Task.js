@@ -5,8 +5,10 @@ import {useState} from "react";
 
 export default function Task({ name, done = false, onToggle, onDelete, onRename }) {
     const [editMode, setEditMode] = useState(false)
-    const soundDelete = new Audio("/sounds/sound_trash.mp3");
-    soundDelete.volume = 0.2;
+    const soundDelete = new Howl({
+        src: ['/sounds/sound_trash.mp3'],
+        volume: 0.2,
+    });
 
 
     return (

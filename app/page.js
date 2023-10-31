@@ -3,14 +3,12 @@ import styles from './styles.css'
 import TaskForm from "@/components/TaskForm";
 import Task from "@/components/Task";
 import { useEffect, useState } from "react";
+import { Howl, Howler } from 'howler';
 
 export default function Home() {
     const [tasks, setTasks] = useState([]);
     const [checkedTasks, setCheckedTasks] = useState(0);
     const [soundPlaying, setSoundPlaying] = useState(false);
-
-
-
     const doneTasks = tasks.filter(task => task.done).length;
     const totalTasks = tasks.length;
 
@@ -46,8 +44,11 @@ export default function Home() {
         });
     }
 
-    const soundReplacement = new Audio("/sounds/sound_done.mp3");
-    soundReplacement.volume = 0.02;
+    let soundReplacement;
+    if (typeof Audio !== 'undefined') {
+        soundReplacement = new Audio("/sounds/sound_done.mp3");
+        soundReplacement.volume = 0.02;
+    }
 
     function updateTask(index, newDone) {
         setTasks((prevState) => {
@@ -56,13 +57,15 @@ export default function Home() {
 
             const numCheckedTasks = newTasks.filter((task) => task.done).length;
 
-            if (numCheckedTasks === totalTasks) {
-                if (!soundPlaying) {
-                    const soundReplacement = new Audio("/sounds/sound_done.mp3");
-                    soundReplacement.volume = 0.02;
-                    soundReplacement.play();
-                    setSoundPlaying(true);
-                }
+            if (numCheckedTasks === totalTasks && !soundPlaying) {
+                const sound = new Howl({
+                    src: ['/sounds/sound_done.mp3'],
+                    volume: 0.02,
+                    onend: () => {
+                        setSoundPlaying(true);
+                    },
+                });
+                sound.play();
             } else {
                 setSoundPlaying(false);
             }
@@ -116,11 +119,6 @@ export default function Home() {
             return "Bravo, tu as terminé pour aujourd'hui 🥳 !";
         }
     }
-
-    function toggleMute() {
-        setIsMuted((prevIsMuted) => !prevIsMuted);
-    }
-
     return (
         <main>
             {soundPlaying && checkedTasks === totalTasks && <img className="img-fade-in" src="/images/mh_quest_complete.png" alt="Image" />}

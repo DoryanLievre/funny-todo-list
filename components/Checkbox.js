@@ -1,12 +1,19 @@
 'use client'
 import React, { useState } from "react";
+import { Howl } from 'howler';
 
 export default function Checkbox({ checked = false, onClick }) {
-    const soundChecked = new Audio("/sounds/sound_checked.mp3");
-    soundChecked.volume = 0.2;
 
-    const soundUnchecked = new Audio("/sounds/sound_unchecked.mp3");
-    soundUnchecked.volume = 0.2;
+    const soundChecked = new Howl({
+        src: ['/sounds/sound_checked.mp3'],
+        volume: 0.2,
+    });
+
+    const soundUnchecked = new Howl({
+        src: ['/sounds/sound_unchecked.mp3'],
+        volume: 0.2,
+    });
+
     const handleCheckboxClick = () => {
         if (checked) {
             soundUnchecked.play();

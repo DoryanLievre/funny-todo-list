@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "file-loader": "^6.2.0",
+    "howler": "^2.2.4",
     "next": "14.0.1",
     "react": "^18",
     "react-beautiful-dnd": "^13.1.1",
