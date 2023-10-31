@@ -9,8 +9,9 @@ export default function Home() {
     const [tasks, setTasks] = useState([]);
     const [checkedTasks, setCheckedTasks] = useState(0);
     const [soundPlaying, setSoundPlaying] = useState(false);
-    const doneTasks = tasks.filter(task => task.done).length;
-    const totalTasks = tasks.length;
+
+    const doneTasks = tasks ? tasks.filter(task => task.done).length : 0;
+    const totalTasks = tasks ? tasks.length : 0;
 
     useEffect(() => {
         if (tasks.length === 0) return;
@@ -126,7 +127,7 @@ export default function Home() {
             <h2>{getMessage()}</h2>
             <TaskForm onAdd={addTask} />
             <div className="task-list-container">
-                {tasks.map((task, index) => (
+                {tasks ? tasks.map((task, index) => (
                     <div className="task-container"  key={index}>
                         <div className="button-container">
                             <button className="move" onClick={() => moveTaskUp(index)}>
@@ -147,7 +148,7 @@ export default function Home() {
                             />
                         </div>
                     </div>
-                ))}
+                )) : null}
             </div>
         </main>
     );
