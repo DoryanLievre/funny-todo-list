@@ -10,7 +10,7 @@ export default function Home() {
     const [checkedTasks, setCheckedTasks] = useState(0);
     const [soundPlaying, setSoundPlaying] = useState(false);
 
-    const doneTasks = tasks.filter(task => task.done).length;
+    const doneTasks = tasks.length > 0 ? tasks.filter(task => task.done).length : 0;
     const totalTasks = tasks.length;
 
     useEffect(() => {
