@@ -10,8 +10,8 @@ export default function Home() {
     const [checkedTasks, setCheckedTasks] = useState(0);
     const [soundPlaying, setSoundPlaying] = useState(false);
 
-    const doneTasks = tasks ? tasks.filter(task => task.done).length : 0;
-    const totalTasks = tasks ? tasks.length : 0;
+    const doneTasks = tasks.filter(task => task.done).length;
+    const totalTasks = tasks.length;
 
     useEffect(() => {
         if (tasks.length === 0) return;
@@ -33,6 +33,7 @@ export default function Home() {
         setTasks(prevState => {
             const newTasks = [...prevState];
             newTasks.splice(index, 1);
+            localStorage.setItem("tasks", JSON.stringify(newTasks));
             return newTasks;
         });
     }
@@ -44,20 +45,12 @@ export default function Home() {
             return newTasks;
         });
     }
-
-    let soundReplacement;
-    if (typeof Audio !== 'undefined') {
-        soundReplacement = new Audio("/sounds/sound_done.mp3");
-        soundReplacement.volume = 0.02;
-    }
-
     function updateTask(index, newDone) {
         setTasks((prevState) => {
             const newTasks = [...prevState];
             newTasks[index].done = newDone;
 
             const numCheckedTasks = newTasks.filter((task) => task.done).length;
-
             if (numCheckedTasks === totalTasks && !soundPlaying) {
                 const sound = new Howl({
                     src: ['/sounds/sound_done.mp3'],
@@ -122,7 +115,9 @@ export default function Home() {
     }
     return (
         <main>
-            {soundPlaying && checkedTasks === totalTasks && <img className="img-fade-in" src="/images/mh_quest_complete.png" alt="Image" />}
+            {checkedTasks === totalTasks && checkedTasks !== 0 &&
+                <img className="img-fade-in" src="/images/mh_quest_complete.png" alt="Image" />
+            }
             <h1>{doneTasks}/{totalTasks} Terminées</h1>
             <h2>{getMessage()}</h2>
             <TaskForm onAdd={addTask} />
@@ -148,7 +143,7 @@ export default function Home() {
                             />
                         </div>
                     </div>
-                )) : null}
+                )) : "Aucune tâche pour le moment"}
             </div>
         </main>
     );

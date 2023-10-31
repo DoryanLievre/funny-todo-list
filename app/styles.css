@@ -151,7 +151,13 @@ img{
    max-width: 500px;
    display: block;
    filter: brightness(1.5);
+   opacity: 0.2;
 }
+img.img-fade-in{
+   opacity: 1;
+   transition: opacity 0.3s linear;
+}
+
 
 /* Média query pour les écrans de taille moyenne (md) */
 @media (min-width: 768px) {
